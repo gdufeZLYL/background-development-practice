@@ -1,1 +1,7 @@
-# background-development-practice
+## 目录结构
+
+```shell
+├── JMS                                     //  JMS  
+│   ├── activemq                            //  ActiveMQ
+├── README.md               
+```
