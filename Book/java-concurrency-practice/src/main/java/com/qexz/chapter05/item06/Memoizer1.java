@@ -1,0 +1,43 @@
+package com.qexz.chapter05.item06;
+
+import net.jcip.annotations.GuardedBy;
+
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 程序清单5-16 使用HashMap和同步机制来初始化缓存
+ * @author zzqnxx@foxmail.com
+ * @date 2018/5/30 17:38
+ */
+public class Memoizer1 <A, V> implements Computable<A, V> {
+    @GuardedBy("this") private final Map<A, V> cache = new HashMap<A, V>();
+    private final Computable<A, V> c;
+
+    public Memoizer1(Computable<A, V> c) {
+        this.c = c;
+    }
+
+    public synchronized V compute(A arg) throws InterruptedException {
+        V result = cache.get(arg);
+        if (result == null) {
+            result = c.compute(arg);
+            cache.put(arg, result);
+        }
+        return result;
+    }
+}
+
+
+interface Computable <A, V> {
+    V compute(A arg) throws InterruptedException;
+}
+
+class ExpensiveFunction
+        implements Computable<String, BigInteger> {
+    public BigInteger compute(String arg) {
+        // after deep thought...
+        return new BigInteger(arg);
+    }
+}
